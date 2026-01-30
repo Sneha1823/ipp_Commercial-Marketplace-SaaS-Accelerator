@@ -27,7 +27,7 @@ env:
   SERVICES_TEST_PROJECT: './src/Services.Test/Services.Test.csproj'
   UI_TEST_PROJECT: './src/UI.Test/UI.Test.csproj'
   CUSTOMER_AZURE_WEBAPP_PACKAGE_PATH: './src/Marketplace.SaaS.Accelerator.CustomerSite/publish'
-  PUBLISHER_AZURE_WEBAPP_PACKAGE_PATH: './src/Marketplace.SaaS.Accelerator.AdminSite/publish'
+  PUBLISHER_AZURE_WEBAPP_PACKAGE_PATH: './src/AdminSite/publish'
   SQLSCRIPT_PATH: './src/Marketplace.SaaS.Accelerator.AdminSite/publish'
   DOTNET_CORE_VERSION: '8.0.303'
   
@@ -47,6 +47,11 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }} 
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     # Run dotnet build and publish customer app
     #- name: Customer App build and publish
@@ -73,13 +78,13 @@ jobs:
       #  package: ${{ env.CUSTOMER_AZURE_WEBAPP_PACKAGE_PATH }}
 
     # Deploy to Azure Web app
-    - name: Admin App deploy azure
+    - name: Deploy Admin App
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ secrets.AZURE_PUBLISHER_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_PUBLISHER_WEBAPP_PUBLISH_PROFILE }}
+        slot-name: production
         package: ${{ env.PUBLISHER_AZURE_WEBAPP_PACKAGE_PATH }}
-    
+
     #- name: EF Database Update
     #  shell: pwsh
     #  run: |
