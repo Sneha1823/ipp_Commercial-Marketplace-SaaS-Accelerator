@@ -1,5 +1,5 @@
 # This workflow will build and push a .NET Core application to an Azure Web App on every push or PR to the main branch.
-#
+
 # To configure this workflow:
 # 1. Set up secrets
 #     AZURE_CUSTOMER_WEBAPP_NAME - set to the name of the publisher APP
